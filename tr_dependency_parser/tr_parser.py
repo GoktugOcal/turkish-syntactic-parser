@@ -72,7 +72,7 @@ class TurkishCKYParser:
         for j in range(self.sentence_length):
             token = self.tokens[j]
             pos = self.pos[j]
-            print(token)
+            # print(token)
             if pos:
                 self.cky_chart[j][j] = pos
             else:
@@ -87,7 +87,7 @@ class TurkishCKYParser:
                     for l in tags_l:
                         for r in tasg_r:
                             tag = self.get_tag(str(l) + " " + str(r))
-                            print(str(l) + " " + str(r), tag)
+                            # print(str(l) + " " + str(r), tag)
                             if tag:
                                 for t in tag:
                                     self.cky_chart[i][j].append(t)
@@ -120,5 +120,13 @@ DEBUG = True
 filename = "tr_dependency_parser/grammar/grammar_all.txt"
 parser = TurkishCKYParser(filename, DEBUG = DEBUG)
 #parser.parse("Dün arkadaşıma bir hediye aldım")
-parser.parse("arkadaşıma hediye aldı")
+#parser.parse("arkadaşıma hediye aldı")
+#parser.parse("Dün arkadaşıma bir hediye aldım")
+text = [
+    "Dün arkadaşıma bir hediye aldım",
+    "Tarihi romanları keyifle okuyorum",
+    "Ben dün akşam yemeği için anneme yardım ettim",
+    "Yüksek sesle müzik dinleme"
+    ]
+parser.parse(text[3])
 parser.show_cky_chart()
