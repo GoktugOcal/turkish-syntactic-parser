@@ -5,13 +5,24 @@ import numpy as np
 import nltk
 import zeyrek
 from tabulate import tabulate
+nltk.download('punkt')
 
 class Node(object):
-    def __init__(self, terminal, child1, child2):
+    def __init__(self, tag, terminal, child1, child2, text = None):
         self.terminal = terminal
+        self.text = text
+        self.tag = tag
         self.child1 = child1
-        self.child1 = child2
+        self.child2 = child2
 
+
+def tree_format(node):
+    tag = "_" + node.tag
+    
+    if node.terminal != True:
+        return "[" + tag + tree_format(node.child1) + tree_format(node.child2) + "]"
+    else:
+        return "[" + tag + " " + node.text + " ]"
 
 
 class TurkishCKYParser:
@@ -51,12 +62,13 @@ class TurkishCKYParser:
             for new_token in splitted:
                 tokens.append(new_token)
 
-        return tokens
+        return org_tokens
     
     def parse(self, sentence):
         self.sentence = sentence
         self.tokens = self.tokenize(sentence)
-        self.pos = [self.get_tag(self.analyzer.get_lemma(token)) for token in self.tokens]
+        # self.pos = [self.get_tag(self.analyzer.get_lemma(token)) for token in self.tokens]
+        self.pos = [[Node(tag, True, None, None, text = token) for tag in list(set(self.analyzer.word_parse(token)))] for token in self.tokens] ## NEW
         self.sentence_length = len(self.tokens)
 
         self.cky_chart = [[[] for x in range(self.sentence_length)] for y in range(self.sentence_length)]
@@ -64,8 +76,10 @@ class TurkishCKYParser:
         if self.DEBUG: print("POS Tags :", self.pos)
 
         self.init_chart()
-        #self.fill_chart()
 
+        for item in self.cky_chart[0][-1]:
+            if item.tag == "S":
+                print(tree_format(item))
         
     def init_chart(self):
         # j : column
@@ -82,16 +96,16 @@ class TurkishCKYParser:
             for i in range(j-1,-1,-1): # fill row i in column j
                 for k in range(i, j): # loop over possible split points k
                     tags_l = self.cky_chart[i][k]
-                    tasg_r = self.cky_chart[k+1][j]
+                    tags_r = self.cky_chart[k+1][j]
 
                     for l in tags_l:
-                        for r in tasg_r:
-                            tag = self.get_tag(str(l) + " " + str(r))
-                            # print(str(l) + " " + str(r), tag)
+                        for r in tags_r:
+                            tag = self.get_tag(str(l.tag) + " " + str(r.tag))
+                            # print(str(l.tag) + " " + str(r.tag), tag)
                             if tag:
                                 for t in tag:
-                                    self.cky_chart[i][j].append(t)
-
+                                    self.cky_chart[i][j].append(Node(t, False, l, r))
+       
     
     def fill_chart(self):
         for span in range(self.sentence_length-1):
@@ -111,7 +125,14 @@ class TurkishCKYParser:
 
 
     def show_cky_chart(self):
-        chart = [self.tokens] + self.cky_chart
+        chart = self.cky_chart
+        for i in range(len(chart)):
+            for j in range(len(chart[i])):
+                tags = []
+                for node in chart[i][j]:
+                    tags.append(node.tag)
+                chart[i][j] =  tags
+        chart = [self.tokens] + chart
         print("\n######### CKY CHART #########")
         print(tabulate(chart))
 
@@ -128,5 +149,5 @@ text = [
     "Ben dün akşam yemeği için anneme yardım ettim",
     "Yüksek sesle müzik dinleme"
     ]
-parser.parse(text[3])
+parser.parse(text[0])
 parser.show_cky_chart()

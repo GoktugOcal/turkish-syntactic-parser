@@ -38,6 +38,7 @@ class MorphAnalyzer:
     
     def suffix_parse(self, token):
         best_parse = self.find_best_parse(token)
+        print(best_parse)
 
         if best_parse:
             if best_parse.pos == "Verb":
@@ -54,3 +55,59 @@ class MorphAnalyzer:
                 return [best_parse.word]
 
         return [token]
+
+
+
+    ############# NEW
+
+    def get_time(self, morph_list):
+        time = None
+        if "Prog1" in morph_list: time =  "Present1"
+        if "Prog2" in morph_list: time =  "Present2"
+        if "Fut" in morph_list: time =  "Fut"
+        if "Past" in morph_list: time =  "Past"
+        return time
+
+    def word_parse(self, token):
+        parses = self.analyzer.analyze(token)[0]
+        possible = []
+        for parse in parses:
+            pos = parse.pos
+            suff = parse.morphemes[-1]
+            time = self.get_time(parse.morphemes)
+            if pos == "Verb":
+                if time != None:
+                    nonterminal = "VP"
+                    if "Past" in time: nonterminal += "PAST"
+                    elif "Present" in time: nonterminal += "PRE"
+                    elif "Fut" in time: nonterminal += "FUT"
+
+                    if suff == "A1pl": nonterminal += "1PL"
+                    elif suff == "A1sg": nonterminal += "1"
+                    elif suff == "A2pl": nonterminal += "2PL"
+                    elif suff == "A2sg": nonterminal += "2"
+                    elif suff == "A3pl": nonterminal += "3PL"
+                    elif suff == "A3sg": nonterminal += "3"
+
+                    possible.append(nonterminal)
+                else: continue
+                
+            elif pos == "Noun":
+                nonterminal = "NP"
+                # if "1pl" in suff: nonterminal += "1PL"
+                # elif "1sg" in suff: nonterminal += "1"
+                # elif "2pl" in suff: nonterminal += "2PL"
+                # elif "2sg" in suff: nonterminal += "2"
+                # elif "3pl" in suff: nonterminal += "3PL"
+                # elif "3sg" in suff: nonterminal += "3"
+                    
+                possible.append(nonterminal)
+            elif token.endswith("le"):
+                possible.append("ADV")
+            
+            elif "ADJ" in pos.upper():
+                possible.append("ADJ")
+                
+            else: possible.append(pos.upper())
+                
+        return possible 
