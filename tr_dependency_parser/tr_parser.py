@@ -1,11 +1,11 @@
-from grammar_converter import GrammarConverter
-from tools.morph_analyze import MorphAnalyzer
+from tr_dependency_parser.grammar_converter import GrammarConverter
+from tr_dependency_parser.tools.morph_analyze import MorphAnalyzer
 
 import numpy as np
 import nltk
 import zeyrek
 from tabulate import tabulate
-nltk.download('punkt')
+# nltk.download('punkt')
 
 class Node(object):
     def __init__(self, tag, terminal, child1, child2, text = None):
@@ -50,6 +50,10 @@ class TurkishCKYParser:
             self.grammar_rules[b].append(a)
         
 
+    def get_pos(self, token):
+        if token in self.grammar_rules.keys(): return [Node(tag, True, None, None, text = token) for tag in self.grammar_rules[token]]
+        else: return [Node(tag, True, None, None, text = token) for tag in list(set(self.analyzer.word_parse(token)))]
+    
     def get_tag(self, token):
         if token in self.grammar_rules.keys(): return self.grammar_rules[token]
         else: return None
@@ -68,12 +72,14 @@ class TurkishCKYParser:
         self.sentence = sentence
         self.tokens = self.tokenize(sentence)
         # self.pos = [self.get_tag(self.analyzer.get_lemma(token)) for token in self.tokens]
-        self.pos = [[Node(tag, True, None, None, text = token) for tag in list(set(self.analyzer.word_parse(token)))] for token in self.tokens] ## NEW
+
+        # self.pos = [[Node(tag, True, None, None, text = token) for tag in list(set(self.analyzer.word_parse(token)))] for token in self.tokens] ## NEW
+        self.pos = [self.get_pos(token.lower()) for token in self.tokens] ## NEW
         self.sentence_length = len(self.tokens)
 
         self.cky_chart = [[[] for x in range(self.sentence_length)] for y in range(self.sentence_length)]
         if self.DEBUG: print("Tokens :", self.tokens)
-        if self.DEBUG: print("POS Tags :", self.pos)
+        if self.DEBUG: print("POS Tags :", [[node.tag for node in nodes] for nodes in self.pos])
 
         self.init_chart()
 
@@ -144,10 +150,11 @@ parser = TurkishCKYParser(filename, DEBUG = DEBUG)
 #parser.parse("arkadaşıma hediye aldı")
 #parser.parse("Dün arkadaşıma bir hediye aldım")
 text = [
-    "Dün arkadaşıma bir hediye aldım",
-    "Tarihi romanları keyifle okuyorum",
-    "Ben dün akşam yemeği için anneme yardım ettim",
-    "Yüksek sesle müzik dinleme"
+    "Dün arkadaşıma bir hediye aldım", #0
+    "Tarihi romanları keyifle okuyorum", #1
+    "Ben dün akşam yemeği için anneme yardım ettim", #2
+    "Yüksek sesle müzik dinleme", #3
+    "Ben arkadaşıma hediye aldın" #4
     ]
-parser.parse(text[0])
+parser.parse(text[2])
 parser.show_cky_chart()

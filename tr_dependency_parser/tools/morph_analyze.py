@@ -38,7 +38,6 @@ class MorphAnalyzer:
     
     def suffix_parse(self, token):
         best_parse = self.find_best_parse(token)
-        print(best_parse)
 
         if best_parse:
             if best_parse.pos == "Verb":
@@ -55,8 +54,6 @@ class MorphAnalyzer:
                 return [best_parse.word]
 
         return [token]
-
-
 
     ############# NEW
 
@@ -75,7 +72,7 @@ class MorphAnalyzer:
             pos = parse.pos
             suff = parse.morphemes[-1]
             time = self.get_time(parse.morphemes)
-            if pos == "Verb":
+            if pos == "Verb":                    
                 if time != None:
                     nonterminal = "VP"
                     if "Past" in time: nonterminal += "PAST"
@@ -90,6 +87,9 @@ class MorphAnalyzer:
                     elif suff == "A3sg": nonterminal += "3"
 
                     possible.append(nonterminal)
+                elif "Imp" in parse.morphemes:
+                    possible.append("VPIMP")
+                
                 else: continue
                 
             elif pos == "Noun":
@@ -102,6 +102,18 @@ class MorphAnalyzer:
                 # elif "3sg" in suff: nonterminal += "3"
                     
                 possible.append(nonterminal)
+            elif pos == "Pron":
+                nonterminal = "PRO"
+                if "1pl" in suff: nonterminal += "1PL"
+                elif "1sg" in suff: nonterminal += "1"
+                elif "2pl" in suff: nonterminal += "2PL"
+                elif "2sg" in suff: nonterminal += "2"
+                elif "3pl" in suff: nonterminal += "3PL"
+                elif "3sg" in suff: nonterminal += "3"
+
+                possible.append(nonterminal)
+                return [nonterminal]
+
             elif token.endswith("le"):
                 possible.append("ADV")
             
