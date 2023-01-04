@@ -61,6 +61,8 @@ class MorphAnalyzer:
         time = None
         if "Prog1" in morph_list: time =  "Present1"
         if "Prog2" in morph_list: time =  "Present2"
+        if "Aor" in morph_list: time = "Present"
+        if "Cop" in morph_list: time = "Present"
         if "Fut" in morph_list: time =  "Fut"
         if "Past" in morph_list: time =  "Past"
         return time
@@ -91,18 +93,32 @@ class MorphAnalyzer:
                     possible.append("VPIMP")
                 
                 else: continue
+            elif suff == "Gen":
+                nonterminal = "GENITIVE"
+                if "1pl" in parse.morphemes[-2]: nonterminal += "1PL"
+                elif "1sg" in parse.morphemes[-2]: nonterminal += "1"
+                elif "2pl" in parse.morphemes[-2]: nonterminal += "2PL"
+                elif "2sg" in parse.morphemes[-2]: nonterminal += "2"
+                elif "3pl" in parse.morphemes[-2]: nonterminal += "3PL"
+                elif "3sg" in parse.morphemes[-2]: nonterminal += "3"
+                possible.append(nonterminal)
                 
             elif pos == "Noun":
                 nonterminal = "NP"
-                # if "1pl" in suff: nonterminal += "1PL"
-                # elif "1sg" in suff: nonterminal += "1"
-                # elif "2pl" in suff: nonterminal += "2PL"
-                # elif "2sg" in suff: nonterminal += "2"
-                # elif "3pl" in suff: nonterminal += "3PL"
-                # elif "3sg" in suff: nonterminal += "3"
-                    
+
+                if "P1pl" in suff: nonterminal += "1PL"
+                elif "P1sg" in suff: nonterminal += "1"
+                elif "P2pl" in suff: nonterminal += "2PL"
+                elif "P2sg" in suff: nonterminal += "2"
+                elif "P3pl" in suff: nonterminal += "3PL"
+                elif "P3sg" in suff: nonterminal += "3"
+                elif "A3pl" in suff: nonterminal += "PL"
+                elif suff == "Dat": nonterminal = "DAT"
+                elif suff == "Loc": nonterminal = "LOC"
+
                 possible.append(nonterminal)
             elif pos == "Pron":
+            
                 nonterminal = "PRO"
                 if "1pl" in suff: nonterminal += "1PL"
                 elif "1sg" in suff: nonterminal += "1"
@@ -116,9 +132,17 @@ class MorphAnalyzer:
 
             elif token.endswith("le"):
                 possible.append("ADV")
+
+            elif "ADV" in pos.upper():
+                possible.append("ADV")
             
             elif "ADJ" in pos.upper():
+                if "Verb" in parse.morphemes: possible.append("PREQ")
+                
                 possible.append("ADJ")
+
+            elif "Ques" == pos:
+                possible.append("Q")
                 
             else: possible.append(pos.upper())
                 

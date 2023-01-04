@@ -1,11 +1,13 @@
-from tr_dependency_parser.grammar_converter import GrammarConverter
-from tr_dependency_parser.tools.morph_analyze import MorphAnalyzer
+from grammar_converter import GrammarConverter
+from tools.morph_analyze import MorphAnalyzer
 
 import numpy as np
 import nltk
 import zeyrek
 from tabulate import tabulate
 # nltk.download('punkt')
+import warnings
+warnings.filterwarnings("ignore")
 
 class Node(object):
     def __init__(self, tag, terminal, child1, child2, text = None):
@@ -30,8 +32,10 @@ class TurkishCKYParser:
     def __init__(self, filename, DEBUG=False):
         self.DEBUG = DEBUG
         cg = GrammarConverter(filename)
-        cnf = np.unique(np.array(cg.convert_grammar(), dtype = object)).tolist()
-
+        # cnf = np.unique(np.array(cg.convert_grammar(), dtype = object)).tolist()
+        cnf = cg.convert_grammar()
+        self.cnf = cnf
+        
         self.analyzer = MorphAnalyzer()
 
         self.grammar_rules = {}
@@ -144,8 +148,10 @@ class TurkishCKYParser:
 
 
 DEBUG = True
-filename = "tr_dependency_parser/grammar/grammar_all.txt"
+filename = "tr_dependency_parser/grammar/grammar.txt"
 parser = TurkishCKYParser(filename, DEBUG = DEBUG)
+# print(parser.cnf)
+
 #parser.parse("Dün arkadaşıma bir hediye aldım")
 #parser.parse("arkadaşıma hediye aldı")
 #parser.parse("Dün arkadaşıma bir hediye aldım")
@@ -154,7 +160,37 @@ text = [
     "Tarihi romanları keyifle okuyorum", #1
     "Ben dün akşam yemeği için anneme yardım ettim", #2
     "Yüksek sesle müzik dinleme", #3
-    "Ben arkadaşıma hediye aldın" #4
+    "Ben arkadaşıma hediye aldın", #4
+    "Benim kalemim oldu", #5
+    "Ben okula gittim", #6
+    "Ben dün okula gittim", #7
+    "Destanlar milli kültürümüzü ve tarihimizi anlatır" #8
     ]
-parser.parse(text[2])
+
+test = ["Dün arkadaşıma bir hediye aldım",
+"Tarihi romanları keyifle okuyorum",
+"Ben dün akşam yemeği için anneme yardım ettim", ######### !!!!!!!!!
+"Destanlar milli kültürümüzü ve tarihimizi anlatır", ######### ??
+"Yaz meyvelerinden karpuz bence en güzel meyvedir",
+"Bu akşamki toplantıya katılacak mısınız",
+"Bu ağacın altında her gece mehtabı izlerdik",  ######### !!!!!!!!!
+"Siz buraya en son ne zaman geldiniz",
+"Okul bizim köye epeyce uzaktaydı",
+"Yüksek sesle müzik dinleme"]
+
+false = ["Ben arkadaşıma hediye aldın",
+"Tarihi bir romanlar okudum",
+"Dün babama yardım edeceğim",
+"Ben okul gittim",
+"Ben kitap okundu",
+"Ben okulda gittim"]
+
+true = ["Ben arkadaşıma hediye aldım",
+"Tarihi romanlar okudum",
+"Dün babama yardım ettim",
+"Ben okula gittim",
+"Ben kitap okudum"]
+
+
+parser.parse(test[7])
 parser.show_cky_chart()
