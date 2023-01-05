@@ -48,3 +48,23 @@ class parse_visualizer:
             options = self.options,
             manual = True,
         )
+    
+    def pos_tree_vis(self, sentence, tokens, tree):
+        def get_nodes(node):
+            if node.terminal:
+                return [node]
+
+            return [node] + get_nodes(node.child1) + get_nodes(node.child2)
+
+        ents = []
+        for node in get_nodes(tree):
+            ents.append({"start_token" : node.token_range[0], 
+                        "end_token"   : node.token_range[1]+1, 
+                        "label" : node.tag})
+        ents.reverse()
+        doc = {"text" : sentence, "spans" : ents, "tokens" : tokens}
+        return displacy.render(doc, 
+                        style = "span",
+                        options = self.options,
+                        manual = True,
+               )
