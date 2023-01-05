@@ -112,9 +112,11 @@ class MorphAnalyzer:
                 elif "P2sg" in suff: nonterminal += "2"
                 elif "P3pl" in suff: nonterminal += "3PL"
                 elif "P3sg" in suff: nonterminal += "3"
-                elif "A3pl" in suff: nonterminal += "PL"
+                elif "A3pl" in suff: nonterminal += "3PL"
                 elif suff == "Dat": nonterminal = "DAT"
                 elif suff == "Loc": nonterminal = "LOC"
+                elif suff == "Abl": nonterminal = "ABL"
+                elif suff == "Acc": nonterminal += "ACC"
 
                 possible.append(nonterminal)
             elif pos == "Pron":
