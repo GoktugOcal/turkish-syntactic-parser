@@ -132,7 +132,7 @@ class TurkishCKYParser:
             for item in self.cky_chart[0][-1]:
                 if item.tag == "S":
                     print(tree_format(item), end="\t")
-                    print("Score :",round(item.prob),2)
+                    print("Score :",round(item.prob,2))
 
     def fill_chart(self):
         # j : column

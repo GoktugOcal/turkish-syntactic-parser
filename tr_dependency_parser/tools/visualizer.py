@@ -9,19 +9,22 @@ class parse_visualizer:
             
         nonterm = set([line.split(" ->")[0] if "#" not in line else "" for line in lines])
         color_dict = {
-            "NP" : "turquoise",
-            "PRO" : "palevioletred",
-            "ADJ" : "lime",
-            "VP" : "lightpink",
-            "ADV" : "khaki",
-            "POSTP" : "cornflowerblue",
-            "SG" : "tomato",
-            "S" : "tomato",
-            "DET" : "limegreen",
-            "DAT" : "limegreen",
-            "NUM" : "salmon",
-            "Q" : "y",
-            "GENITIVE" : "green"
+            "NP" : "#8dd3c7",
+            "PRO" : "#ffffb3",
+            "ADJ" : "#bebada",
+            "VP" : "#fb8072",
+            "ADV" : "#80b1d3",
+            "POSTP" : "#fdb462",
+            "SG" : "#bc80bd",
+            "S" : "#bc80bd",
+            "DET" : "#ccebc5",
+            "DAT" : "#ccebc5",
+            "NUM" : "#ffed6f",
+            "Q" : "#fdb462",
+            "GENITIVE" : "#b3de69",
+            "ACC" : "#fccde5",
+            "LOC" : "#fccde5"
+
         }
 
         colors = {}
@@ -50,7 +53,8 @@ class parse_visualizer:
             doc, 
             style = "ent",
             options = self.options,
-            manual = True
+            manual = True,
+            jupyter=False
         )
     
     def pos_tree_vis(self, sentence, tokens, tree):
