@@ -8,9 +8,9 @@ def preprocess(text):
     return text
 
 def tree_format(node):
-    tag = "_" + node.tag
+    tag = node.tag
     
     if node.terminal != True:
-        return "[" + tag + tree_format(node.child1) + tree_format(node.child2) + "]"
+        return "(" + tag + tree_format(node.child1) + tree_format(node.child2) + ")"
     else:
-        return "[" + tag + " " + node.text + " ]"
+        return "(" + tag + " " + node.text + " ) "

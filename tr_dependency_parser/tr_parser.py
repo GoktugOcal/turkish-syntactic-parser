@@ -124,13 +124,15 @@ class TurkishCKYParser:
         if "S" in tags:
             print("Sentence is grammatically correct.")
         else:
-            raise ValueError("Sentence is not grammatically correct...")
+            # raise ValueError("Sentence is not grammatically correct...")
+            print("Sentence is not grammatically correct...")
+
 
         if self.DEBUG:
             for item in self.cky_chart[0][-1]:
                 if item.tag == "S":
-                    print(tree_format(item))
-                    print(item.prob)
+                    print(tree_format(item), end="\t")
+                    print("Score :",round(item.prob),2)
 
     def fill_chart(self):
         # j : column
@@ -192,8 +194,11 @@ class TurkishCKYParser:
         
         return self.get_terminal_nodes(node.child1) + self.get_terminal_nodes(node.child2)
     
-    def show_sentence_structure(self):
-        print(tree_format(self.get_tree()))
+    def show_sentence_structure(self, get=False):
+        structure = tree_format(self.get_tree())
+        print(structure)
+        if get: return structure
+
 
     def show_pretty(node):
         terminals = [self.cky_chart[i][i].tag for i in range(len(self.tokens))]
