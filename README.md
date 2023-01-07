@@ -135,3 +135,6 @@ visualizer.tree_vis(sentence, parser.tokens, parser.get_tree()) # we need tokens
 output_file = "..."
 visualizer.tree_vis(sentence, parser.tokens, parser.get_tree()).write_image(output_file)
 ```
+
+## Acknowledgement
+Some parts of this tool is created by using [Zeyrek](https://github.com/obulat/zeyrek) Morphology Analyzer and [NLTK](https://www.nltk.org).
