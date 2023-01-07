@@ -1,6 +1,6 @@
-from tr_dependency_parser.grammar_converter import GrammarConverter
-from tr_dependency_parser.tools.morph_analyze import MorphAnalyzer
-from tr_dependency_parser.tools.helper import *
+from tr_syntactic_parser.grammar_converter import GrammarConverter
+from tr_syntactic_parser.tools.morph_analyze import MorphAnalyzer
+from tr_syntactic_parser.tools.helper import *
 
 import numpy as np
 import math
@@ -100,10 +100,6 @@ class TurkishCKYParser:
     def tokenize(self, sentence):
         tokens = []
         org_tokens = nltk.tokenize.word_tokenize(sentence)
-        for token in org_tokens:
-            splitted = self.analyzer.suffix_parse(token)
-            for new_token in splitted:
-                tokens.append(new_token)
 
         return org_tokens
     
@@ -206,7 +202,7 @@ class TurkishCKYParser:
 
 if __name__ == "__main__":
     DEBUG = True
-    filename = "tr_dependency_parser/grammar/grammar.txt"
+    filename = "tr_syntactic_parser/grammar/grammar.txt"
     parser = TurkishCKYParser(filename, DEBUG = DEBUG)
 
     text = [

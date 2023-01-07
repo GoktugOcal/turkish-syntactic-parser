@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 class parse_visualizer:
     def __init__(self):
-        with open("tr_dependency_parser/grammar/grammar.txt", "r") as f:
+        with open("tr_syntactic_parser/grammar/grammar.txt", "r") as f:
             lines = f.readlines()
             
         nonterm = set([line.split(" ->")[0] if "#" not in line else "" for line in lines])
@@ -41,7 +41,7 @@ class parse_visualizer:
             "distance": 200}
 
     
-    def pos_vis(self, sentence, terminals):
+    def pos_vis(self, sentence, terminals, jupyter=True):
         ents = []
         for terminal in terminals:
             ents.append({"start" : terminal.span[0], 
@@ -54,10 +54,10 @@ class parse_visualizer:
             style = "ent",
             options = self.options,
             manual = True,
-            jupyter=False
+            jupyter=jupyter
         )
     
-    def pos_tree_vis(self, sentence, tokens, tree):
+    def pos_tree_vis(self, sentence, tokens, tree, jupyter=True):
         def get_nodes(node):
             if node.terminal:
                 return [node]
@@ -75,6 +75,7 @@ class parse_visualizer:
                         style = "span",
                         options = self.options,
                         manual = True,
+                        jupyter=jupyter
                )
 
     def tree_vis(self, sentence, tokens, tree):

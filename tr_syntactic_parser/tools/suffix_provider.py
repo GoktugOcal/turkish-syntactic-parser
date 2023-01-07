@@ -29,10 +29,10 @@ class corpus_parser:
             counts = counts.astype("float")
             self.lemma_freq = dict(zip(uniq,counts))
 
-            with open("tr_dependency_parser/grammar/lemma_freq.json", "w", encoding='utf8') as f:
+            with open("tr_syntactic_parser/grammar/lemma_freq.json", "w", encoding='utf8') as f:
                 f.write(json.dumps([self.lemma_freq], ensure_ascii=False))
 
-            print("Lemma frequencies were saved to :", "tr_dependency_parser/grammar/lemma_freq.json")
+            print("Lemma frequencies were saved to :", "tr_syntactic_parser/grammar/lemma_freq.json")
             
     def find_best_parse(self, word):
         best_parse = None
@@ -85,10 +85,10 @@ class corpus_parser:
         for key in merged_types.keys():
             if "Prog" in key or "Fut" in key or "Past" in key:
                 temp[key] = list(merged_types[key])
-        with open('tr_dependency_parser/grammar/combined_verb_suffix_morphemes.json', 'w') as f:
+        with open('tr_syntactic_parser/grammar/combined_verb_suffix_morphemes.json', 'w') as f:
             json.dump(temp, f)
         
-        print("Saved to :", "tr_dependency_parser/grammar/combined_verb_suffix_morphemes.json")
+        print("Saved to :", "tr_syntactic_parser/grammar/combined_verb_suffix_morphemes.json")
 
     def get_all_suffix_classes(self):
         fixes = {}
@@ -112,14 +112,14 @@ class corpus_parser:
         for key in fixes.keys():
             temp[key] = list(fixes[key])
 
-        with open("tr_dependency_parser/grammar/all_suffix_classes.json","w", encoding='utf-8') as f:
+        with open("tr_syntactic_parser/grammar/all_suffix_classes.json","w", encoding='utf-8') as f:
             json.dump(temp, f)
 
-        print("Saved to :", "tr_dependency_parser/grammar/all_suffix_classes.json")
+        print("Saved to :", "tr_syntactic_parser/grammar/all_suffix_classes.json")
 
         
     def verb_suffix_to_cnf(self):
-        temp = json.loads(open("tr_dependency_parser/grammar/combined_verb_suffix_morphemes.json","r").read())
+        temp = json.loads(open("tr_syntactic_parser/grammar/combined_verb_suffix_morphemes.json","r").read())
         str = ""
         for key in temp.keys():
             if "Past" in key: tense = "PAST"
@@ -135,10 +135,10 @@ class corpus_parser:
             for suff in temp[key]:
                 str += "\n" + finalkey + " -> " + suff
 
-        with open("tr_dependency_parser/grammar/verb_suffix_cnf.txt","w", encoding='utf-8') as f:
+        with open("tr_syntactic_parser/grammar/verb_suffix_cnf.txt","w", encoding='utf-8') as f:
             f.write(str)
 
-        print("Saved to :", "tr_dependency_parser/grammar/verb_suffix_cnf.txt")
+        print("Saved to :", "tr_syntactic_parser/grammar/verb_suffix_cnf.txt")
     
     def lexicon_builder(self):
         sentences = self.sentences
@@ -155,7 +155,7 @@ class corpus_parser:
         for key in lexicon.keys():
             temp[key] = list(lexicon[key])
 
-        with open("tr_dependency_parser/grammar/the_lexicon_reversed.json","w", encoding='utf-8') as f:
+        with open("tr_syntactic_parser/grammar/the_lexicon_reversed.json","w", encoding='utf-8') as f:
             json.dump(temp, f)
 
-        print("Lexicon was saved to :", "tr_dependency_parser/grammar/the_lexicon_reversed.json")
+        print("Lexicon was saved to :", "tr_syntactic_parser/grammar/the_lexicon_reversed.json")

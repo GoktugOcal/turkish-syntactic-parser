@@ -8,7 +8,7 @@ from tqdm import tqdm
 from tr_parser import TurkishCKYParser
 
 DEBUG = True
-filename = "tr_dependency_parser/grammar/grammar_all.txt"
+filename = "tr_syntactic_parser/grammar/grammar_all.txt"
 parser = TurkishCKYParser(filename, DEBUG = DEBUG)
 
 text = '''

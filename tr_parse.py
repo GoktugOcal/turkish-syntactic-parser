@@ -1,6 +1,6 @@
 import argparse
-from tr_dependency_parser.tools.helper import *
-from tr_dependency_parser.tr_parser import TurkishCKYParser
+from tr_syntactic_parser.tools.helper import *
+from tr_syntactic_parser.tr_parser import TurkishCKYParser
 
 parser = argparse.ArgumentParser(
     prog="TR CKY Parser",
@@ -14,7 +14,7 @@ args = parser.parse_args()
 sentence = args.sentence
 sentence = preprocess(sentence)
 
-filename = "tr_dependency_parser/grammar/grammar.txt"
+filename = "tr_syntactic_parser/grammar/grammar.txt"
 parser = TurkishCKYParser(filename)
 
 parser.parse(sentence)
