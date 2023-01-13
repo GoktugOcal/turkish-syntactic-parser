@@ -22,11 +22,11 @@ $ pip install -r requirements.txt
 
 ### Use from CLI
 ```shell
-$ python tr_parse -s [<string>]
+$ python tr_parse.py -s [<string>]
 ```
 
 ```shell
-$ python tr_parse -s "Ben okula gittim."
+$ python tr_parse.py -s "Ben okula gittim."
 
 Tokens : ['ben', 'okula', 'gittim']
 POS Tags : [['PRO1'], ['DAT'], ['VPPAST1']]
@@ -56,7 +56,7 @@ sentence = preprocess(sentence) # preprocess the sentence
 filename = "tr_syntactic_parser/grammar/grammar.txt" # specify the location of CNF grammar"
 parser = TurkishCKYParser(filename) # initialize the parser
 
-arser.parse(sentence) # parse
+parser.parse(sentence) # parse
 parser.show_cky_chart() # show filled CKY chart
 print("##### BEST SENTENCE STRUCTURE #####")
 parser.show_sentence_structure() # show best possible sentence structure
